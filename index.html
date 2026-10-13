@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Payroll Cost Calculator — What an Employee Really Costs (2026)</title>
+<meta name="description" content="Free payroll cost calculator. Enter salaries and see the true cost of an employee: employer payroll taxes, unemployment insurance, benefits, and workers comp. No signup.">
+<link rel="canonical" href="https://wbaucum93.github.io/payroll-cost-calculator/">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: #ffffff; color: #111; line-height: 1.6; }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 24px 20px 64px; }
+  header { text-align: center; padding: 40px 0 28px; }
+  h1 { font-size: 2.1rem; letter-spacing: -0.5px; margin-bottom: 8px; }
+  .sub { color: #555; font-size: 1.1rem; }
+  .tool { border: 2px solid #111; border-radius: 12px; padding: 20px; margin: 24px 0; }
+  .field { margin-bottom: 14px; }
+  .field label { display: block; font-size: 0.9rem; color: #444; margin-bottom: 4px; }
+  .field input { width: 100%; border: 1px solid #ccc; border-radius: 8px; padding: 10px 12px; font-size: 1rem; }
+  .field .hint { font-size: 0.8rem; color: #888; margin-top: 2px; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 520px) { .grid2 { grid-template-columns: 1fr; } }
+  .results { background: #f6f6f6; border-radius: 12px; padding: 20px; margin-top: 18px; }
+  .results h2 { font-size: 1.2rem; margin-bottom: 12px; }
+  .rrow { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #e5e5e5; font-size: 0.98rem; }
+  .rrow.total { border-bottom: none; font-weight: 700; font-size: 1.15rem; padding-top: 12px; }
+  .rrow .neg { color: #555; }
+  .headline-num { text-align: center; font-size: 2rem; font-weight: 800; letter-spacing: -0.5px; margin: 6px 0 2px; }
+  .headline-sub { text-align: center; color: #555; margin-bottom: 12px; }
+  .upsell { background: #f6f6f6; border-radius: 12px; padding: 28px 24px; margin: 36px 0; text-align: center; }
+  .upsell h2 { font-size: 1.4rem; margin-bottom: 10px; }
+  .upsell p { color: #444; margin-bottom: 18px; }
+  .prog-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 18px; text-align: left; }
+  @media (max-width: 520px) { .prog-grid { grid-template-columns: 1fr; } }
+  .prog { background: #fff; border: 1px solid #ddd; border-radius: 10px; padding: 16px; }
+  .prog h3 { font-size: 1.05rem; margin-bottom: 4px; }
+  .prog p { font-size: 0.9rem; color: #555; margin-bottom: 10px; }
+  .cta { display: inline-block; background: #111; color: #fff; text-decoration: none; padding: 12px 28px; border-radius: 8px; font-size: 1rem; }
+  .cta:hover { background: #333; }
+  .cta.small { padding: 9px 18px; font-size: 0.9rem; }
+  section.copy { margin: 36px 0; }
+  section.copy h2 { font-size: 1.3rem; margin-bottom: 10px; }
+  section.copy p, section.copy li { color: #333; margin-bottom: 10px; }
+  section.copy ul { padding-left: 22px; }
+  .faq h3 { font-size: 1.05rem; margin: 16px 0 4px; }
+  .faq p { color: #444; }
+  footer { margin-top: 48px; padding-top: 20px; border-top: 1px solid #ddd; font-size: 0.85rem; color: #777; }
+  footer a { color: #555; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <h1>Payroll Cost Calculator</h1>
+    <p class="sub">A $50,000 salary never costs $50,000. See what an employee really costs you.</p>
+  </header>
+
+  <div class="tool">
+    <div class="grid2">
+      <div class="field">
+        <label for="employees">Number of employees</label>
+        <input type="number" id="employees" value="3" min="1" max="10000">
+      </div>
+      <div class="field">
+        <label for="salary">Average annual salary per employee ($)</label>
+        <input type="number" id="salary" value="50000" min="0" max="10000000">
+      </div>
+      <div class="field">
+        <label for="benefits">Benefits per employee / year ($)</label>
+        <input type="number" id="benefits" value="5000" min="0" max="1000000">
+        <div class="hint">Health insurance, retirement match, PTO. Enter 0 if none.</div>
+      </div>
+      <div class="field">
+        <label for="wc">Workers' comp rate (%)</label>
+        <input type="number" id="wc" value="1.5" min="0" max="30" step="0.1">
+        <div class="hint">Varies by industry and state. Office work is often under 1%.</div>
+      </div>
+      <div class="field">
+        <label for="suta">State unemployment (SUTA) rate (%)</label>
+        <input type="number" id="suta" value="2.7" min="0" max="15" step="0.1">
+        <div class="hint">Set by your state. New employers often pay 2–4%.</div>
+      </div>
+      <div class="field">
+        <label for="sscap">Social Security wage base ($)</label>
+        <input type="number" id="sscap" value="176100" min="0" max="1000000">
+        <div class="hint">IRS cap for 2025. 6.2% applies up to this amount.</div>
+      </div>
+    </div>
+
+    <div class="results" id="results">
+      <div class="headline-num" id="bigTotal">$0</div>
+      <div class="headline-sub" id="bigSub">true annual cost</div>
+      <h2>Breakdown <span style="font-weight:400;color:#777;font-size:0.9rem;">(per employee)</span></h2>
+      <div class="rrow"><span>Gross salary</span><span id="rSalary">$0</span></div>
+      <div class="rrow"><span>Social Security (6.2% employer)</span><span id="rSS" class="neg">$0</span></div>
+      <div class="rrow"><span>Medicare (1.45% employer)</span><span id="rMed" class="neg">$0</span></div>
+      <div class="rrow"><span>Federal unemployment (FUTA)</span><span id="rFuta" class="neg">$0</span></div>
+      <div class="rrow"><span>State unemployment (SUTA)</span><span id="rSuta" class="neg">$0</span></div>
+      <div class="rrow"><span>Benefits</span><span id="rBen" class="neg">$0</span></div>
+      <div class="rrow"><span>Workers' comp</span><span id="rWc" class="neg">$0</span></div>
+      <div class="rrow total"><span>True cost per employee</span><span id="rPer">$0</span></div>
+    </div>
+  </div>
+
+  <div class="upsell">
+    <h2>Doing payroll by hand?</h2>
+    <p>You just saw the math. Now imagine running it every two weeks, filing the taxes, and staying compliant in every state you hire in. These platforms do all of it for you.</p>
+    <div class="prog-grid">
+      <div class="prog">
+        <h3>Rippling</h3>
+        <p>All-in-one HR, payroll, and IT for growing companies. One system for onboarding, payroll, and benefits.</p>
+        <!-- AFFILIATE LINK NEEDED: RIPPLING -->
+        <a class="cta small" href="#affiliate-rippling" rel="nofollow sponsored noopener" target="_blank">See Rippling →</a>
+      </div>
+      <div class="prog">
+        <h3>Deel</h3>
+        <p>Payroll for contractors and global teams. Hire and pay anyone, anywhere, without setting up foreign entities.</p>
+        <!-- AFFILIATE LINK NEEDED: DEEL -->
+        <a class="cta small" href="#affiliate-deel" rel="nofollow sponsored noopener" target="_blank">See Deel →</a>
+      </div>
+      <div class="prog">
+        <h3>Gusto</h3>
+        <p>Payroll built for small businesses. Simple pricing, automatic tax filings, and benefits administration.</p>
+        <!-- AFFILIATE LINK NEEDED: GUSTO -->
+        <a class="cta small" href="#affiliate-gusto" rel="nofollow sponsored noopener" target="_blank">See Gusto →</a>
+      </div>
+      <div class="prog">
+        <h3>Papaya Global</h3>
+        <p>Global payroll and workforce management across 160+ countries. Built for companies hiring internationally.</p>
+        <!-- AFFILIATE LINK NEEDED: PAPAYA GLOBAL -->
+        <a class="cta small" href="#affiliate-papaya" rel="nofollow sponsored noopener" target="_blank">See Papaya Global →</a>
+      </div>
+    </div>
+  </div>
+
+  <section class="copy">
+    <h2>How much does an employee really cost?</h2>
+    <p>Most first-time employers budget the salary and forget everything stacked on top of it. Between employer payroll taxes, unemployment insurance, benefits, and workers' comp, a single employee typically costs <strong>25% to 40% more than their salary</strong>. A $50,000 hire often costs $62,000 to $70,000 a year. Use the calculator above with your own numbers before you make an offer.</p>
+    <h2>What is included in employer payroll costs</h2>
+    <ul>
+      <li><strong>Social Security (6.2%):</strong> you match your employee's contribution, up to the annual IRS wage base.</li>
+      <li><strong>Medicare (1.45%):</strong> you match this on all wages, with no cap.</li>
+      <li><strong>FUTA (0.6%):</strong> federal unemployment tax on the first $7,000 of each employee's wages.</li>
+      <li><strong>SUTA:</strong> state unemployment tax. Rates and wage bases vary by state; new employers usually pay 2–4%.</li>
+      <li><strong>Benefits:</strong> health insurance, retirement matches, and paid time off are often the biggest add-on.</li>
+      <li><strong>Workers' comp:</strong> required in nearly every state; rates depend on how risky the work is.</li>
+    </ul>
+    <h2>Hiring your first employee?</h2>
+    <p>If you are starting a business — an HVAC company, a home care agency, a med spa, a food truck, an AI consultancy — the first hire is the moment payroll gets real. Run your numbers here, then pick a payroll platform from the options above so taxes file themselves and you stay compliant from day one.</p>
+  </section>
+
+  <section class="copy faq">
+    <h2>Frequently asked questions</h2>
+    <h3>Is this payroll calculator free?</h3>
+    <p>Yes. It runs entirely in your browser. No account, no signup, nothing uploaded anywhere.</p>
+    <h3>Does this include the employee's income tax?</h3>
+    <p>No. This calculator shows the <em>employer's</em> cost: salary plus the taxes and expenses you pay on top of it. Income tax comes out of the employee's paycheck, not your pocket.</p>
+    <h3>How accurate are the tax rates?</h3>
+    <p>Federal rates (Social Security, Medicare, FUTA) are fixed by law. State unemployment and workers' comp vary widely — adjust those two fields to match your state for a sharper number.</p>
+    <h3>Why does an employee cost more than their salary?</h3>
+    <p>Because the salary is only the starting point. Employer payroll taxes add about 7.65% on FICA alone, unemployment insurance adds more, and benefits plus workers' comp can add thousands per person per year.</p>
+    <h3>Should I do payroll myself or use a service?</h3>
+    <p>One employee in one state is manageable by hand. The moment you add a second state, contractors, or benefits, a payroll platform usually pays for itself in time saved and penalties avoided. The options above cover everything from small business payroll to global teams.</p>
+  </section>
+
+  <footer>
+    <p><strong>Affiliate disclosure:</strong> links to Rippling, Deel, Gusto, and Papaya Global on this page are affiliate links. If you sign up through them, we may earn a commission at no extra cost to you. It helps keep this tool free.</p>
+    <p style="margin-top:8px;">Estimates only, not tax or financial advice. Rates change; confirm current figures with the IRS and your state before making decisions.</p>
+  </footer>
+
+</div>
+
+<script>
+(function () {
+  var ids = ['employees', 'salary', 'benefits', 'wc', 'suta', 'sscap'];
+  function num(id) {
+    var v = parseFloat(document.getElementById(id).value);
+    return isNaN(v) || v < 0 ? 0 : v;
+  }
+  function money(n) {
+    return '$' + Math.round(n).toLocaleString('en-US');
+  }
+  function calc() {
+    var n = Math.max(1, Math.round(num('employees')));
+    var salary = num('salary');
+    var benefits = num('benefits');
+    var wcRate = num('wc') / 100;
+    var sutaRate = num('suta') / 100;
+    var ssCap = num('sscap');
+
+    var ss = Math.min(salary, ssCap) * 0.062;
+    var med = salary * 0.0145;
+    var futa = Math.min(salary, 7000) * 0.006;
+    var suta = Math.min(salary, 7000) * sutaRate;
+    var wc = salary * wcRate;
+
+    var per = salary + ss + med + futa + suta + benefits + wc;
+    var total = per * n;
+    var pct = salary > 0 ? ((per / salary - 1) * 100).toFixed(1) : '0.0';
+
+    document.getElementById('bigTotal').textContent = money(total);
+    document.getElementById('bigSub').textContent =
+      'true annual cost for ' + n + ' employee' + (n === 1 ? '' : 's') +
+      ' (' + pct + '% above salary)';
+    document.getElementById('rSalary').textContent = money(salary);
+    document.getElementById('rSS').textContent = money(ss);
+    document.getElementById('rMed').textContent = money(med);
+    document.getElementById('rFuta').textContent = money(futa);
+    document.getElementById('rSuta').textContent = money(suta);
+    document.getElementById('rBen').textContent = money(benefits);
+    document.getElementById('rWc').textContent = money(wc);
+    document.getElementById('rPer').textContent = money(per);
+  }
+  ids.forEach(function (id) {
+    document.getElementById(id).addEventListener('input', calc);
+  });
+  calc();
+})();
+</script>
+</body>
+</html>
